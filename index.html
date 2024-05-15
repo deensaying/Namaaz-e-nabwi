@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - codingnepalweb.com -->
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ===== CSS ===== -->
+  <link rel="stylesheet" href="/index.css">
+
+  <!-- ===== Boxicons CSS ===== -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+
+  <title>Responsive Navigation Menu Bar</title>
+</head>
+
+<body>
+  <nav class="nav">
+    <i class="uil uil-bars navOpenBtn"></i>
+    <img class="Logo" src="/shalat.png" alt="Namaaz-e-Nabwi" srcset="">
+    <ul class="nav-links">
+      <i class="uil uil-times navCloseBtn"></i>
+      <li><a href="/">Home</a></li>
+      <li><a href="/pages/blog.html">Blog</a></li>
+      <li><a href="/pages/video-gallery.html">Video Gallery</a></li>
+      <li><a href="/pages/image-gallery.html">Image Gallery</a></li>
+      <li><a href="/pages/rulings.html">Rulings</a></li>
+      <li><a href="/pages/contact-us.html">Contact Us</a></li>
+    </ul>
+    <i class="uil uil-search search-icon" id="searchIcon"></i>
+    <div class="search-box">
+      <i class="uil uil-search search-icon"></i>
+      <input type="text" placeholder="Search here..." />
+    </div>
+  </nav>
+  <div class="section_1">
+    <div class="section_1_parent">
+      <div class="section_1_child_1">
+        <div class="section_1_child_Text">
+          <h3>Welcome to <span class="Start-text">Namaaz-e-nabwi</span></h3>
+          <p>Pray as you have seen me praying
+            <span class="Prophet-quotes"> -Prophet muhammad(ﷺ)</span>
+          </p>
+        </div>
+        <div class="section_1_child_button">
+          <a href="" class="Btn">Learn</a>
+        </div>
+      </div>
+      <div class="section_1_child_2">
+        <img src="/iStock-496349694.jpg" alt="Salah">
+      </div>
+    </div>
+  </div>
+  <div class="namaaz-container">
+    <div id="namaazTimings" class="namaaz-table"></div>
+    <div class="namaaz-hadith">
+      <p>Huraith bin Qabisah narrated:
+        "I arrived in Al-Madinah and said: 'O Allah! Facilitate me to be in a righteous gathering.'" He said: "I sat
+        with Abu Hurairah and said: 'Indeed I asked Allah to provide me with a righteous gathering. So narrate a hadith
+        to me which you heard from Allah's Messenger (ﷺ) so that perhaps Allah would cause me to benefit from it.' He
+        said: 'I heard Allah's Messenger (ﷺ) say: "Indeed the first deed by which a servant will be called to account on
+        the Day of Resurrection is his Salat. If it is complete, he is successful and saved, but if it is defective, he
+        has failed and lost. So if something is deficient in his obligatory (prayers) then the Lord, Mighty and Sublime
+        says: 'Look! Are there any voluntary (prayers) for my worshipper?' So with them, what was deficient in his
+        obligatory (prayers) will be completed. Then the rest of his deeds will be treated like that."
+        (Jami` at-Tirmidhi 413
+        Grade: Sahih (Darussalam))</p>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    async function fetchNamaazTimings() {
+      try {
+        const response = await axios.get('https://api.aladhan.com/v1/timingsByCity', {
+          params: {
+            city: 'Mumbai', // Replace 'YourCity' with your city name
+            country: 'India', // Replace 'YourCountry' with your country name
+            method: '1' // Calculation method: 2 for Islamic Society of North America
+          }
+        });
+
+        const timings = response.data.data.timings;
+        delete timings.Imsak;
+        delete timings.LastThird;
+        delete timings.FirstThird;
+
+        displayNamaazTimings(timings);
+      } catch (error) {
+        console.error('Error fetching Namaaz timings:', error);
+      }
+    }
+
+    function displayNamaazTimings(timings) {
+      const namaazTimingsContainer = document.getElementById('namaazTimings');
+      namaazTimingsContainer.innerHTML = '';
+
+      for (const [namaaz, time] of Object.entries(timings)) {
+        if (namaaz === 'Sunrise' || namaaz === 'Sunset' || namaaz === 'Midnight') continue;
+
+        const namaazCard = document.createElement('div');
+        namaazCard.classList.add('namaaz-card');
+
+        const namaazName = document.createElement('h2');
+        namaazName.textContent = namaaz;
+        namaazName.classList.add('namaaz-name');
+
+        const namaazTime = document.createElement('p');
+        namaazTime.textContent = time;
+        namaazTime.classList.add('namaaz-time');
+
+        namaazCard.appendChild(namaazName);
+        namaazCard.appendChild(namaazTime);
+
+        namaazTimingsContainer.appendChild(namaazCard);
+      }
+    }
+
+    async function fetchAndDisplayTimingsPeriodically() {
+      await fetchNamaazTimings();
+      setTimeout(fetchAndDisplayTimingsPeriodically, 86400000);
+    }
+
+    fetchAndDisplayTimingsPeriodically();
+  </script>
+
+  <div class="section_2">
+    <div class="section_2_child_text">
+      <h3>Namaaz component</h3>
+    </div>
+    <div class="section_2_child_icon">
+      <div class="components">
+        <img src="/takbir.png" alt="">
+        <h3>Raful ya dein</h3>
+      </div>
+      <div class="components">
+        <img src="/salat.png" alt="">
+        <h3>Qiyam</h3>
+      </div>
+      <div class="components">
+        <img src="/ruku.png" alt="" srcset="">
+        <h3>rukoo</h3>
+      </div>
+      <div class="components">
+        <img src="/sujud.png" alt="" srcset="">
+        <h3>Sujood</h3>
+      </div>
+      <div class="components">
+        <img src="/salat (1).png" alt="" srcset="">
+        <h3>Tashawud</h3>
+      </div>
+
+    </div>
+  </div>
+  <div class="section_3">
+    <div class="video_content">
+      <iframe width="560" height="315" margin="0 auto" src="https://www.youtube.com/embed/vx1rz-28HNk?si=BIjO6uYBwd-5xf1t"
+        title="YouTube video player" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" download allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <script>
+    const nav = document.querySelector(".nav"),
+      searchIcon = document.querySelector("#searchIcon"),
+      navOpenBtn = document.querySelector(".navOpenBtn"),
+      navCloseBtn = document.querySelector(".navCloseBtn");
+
+    searchIcon.addEventListener("click", () => {
+      nav.classList.toggle("openSearch");
+      nav.classList.remove("openNav");
+      if (nav.classList.contains("openSearch")) {
+        return searchIcon.classList.replace("uil-search", "uil-times");
+      }
+      searchIcon.classList.replace("uil-times", "uil-search");
+    });
+
+    navOpenBtn.addEventListener("click", () => {
+      nav.classList.add("openNav");
+      nav.classList.remove("openSearch");
+      searchIcon.classList.replace("uil-times", "uil-search");
+    });
+    navCloseBtn.addEventListener("click", () => {
+      nav.classList.remove("openNav");
+    });
+  </script>
+     <footer>
+      <div class="content">
+        <div class="left box">
+          <div class="upper">
+            <div class="topic">About us</div>
+            <p>Salah is a website where you can learn about salah according to our beloved Prophet Muhammad(ﷺ) </p>
+          </div>
+          <div class="lower">
+            <div class="topic">Contact us</div>
+            <div class="phone">
+              <a href="#"><i class="fas fa-phone-volume"></i>9004549410</a>
+            </div>
+            <div class="email">
+              <a href="#"><i class="fas fa-envelope"></i>deensayingsss@gmail.com</a>
+            </div>
+          </div>
+        </div>
+        <div class="middle box">
+          <div class="topic">Our Services</div>
+          <div><a href="/">Home</a></div>
+          <div><a href="/pages/blog.html">Blog</a></div>
+          <div><a href="/pages/image-gallery.html">Image Gallery</a></div>
+          <div><a href="/pages/contact-us.html">Contact Us</a></div>
+          
+        </div>
+      </div>
+      <div class="bottom">
+        <p>Copyright © 202 <a href="/">Salah</a> All rights reserved | child company of <a href="https://deensaying.in/">deen saying</a></p>
+      </div>
+    </footer>
+</body>
+
+</html>
